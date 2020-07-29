@@ -86,7 +86,7 @@ def generate_ipa(path, display_name):
                 shutil.move(from_dir, to_dir)
 
         target_dir = './' + PAYLOAD_DIR
-        zip_args = ('zip', '-qr', os.path.join(os.getcwd(), ipa_filename), target_dir)
+        zip_args = ('7z', 'a', os.path.join(os.getcwd(), ipa_filename), '-tzip', '-r', target_dir)
         subprocess.check_call(zip_args, cwd=TEMP_DIR)
         shutil.rmtree(PAYLOAD_PATH)
     except Exception as e:
@@ -120,7 +120,7 @@ def on_message(message, data):
                 scp.get(scp_from, scp_to)
 
             chmod_dir = os.path.join(PAYLOAD_PATH, os.path.basename(dump_path))
-            chmod_args = ('chmod', '655', chmod_dir)
+            chmod_args = ('attrib', '-r', chmod_dir)
             try:
                 subprocess.check_call(chmod_args)
             except subprocess.CalledProcessError as err:
@@ -138,7 +138,7 @@ def on_message(message, data):
                 scp.get(scp_from, scp_to, recursive=True)
 
             chmod_dir = os.path.join(PAYLOAD_PATH, os.path.basename(app_path))
-            chmod_args = ('chmod', '755', chmod_dir)
+            chmod_args = ('attrib', '-r', chmod_dir)
             try:
                 subprocess.check_call(chmod_args)
             except subprocess.CalledProcessError as err:
